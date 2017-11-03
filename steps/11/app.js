@@ -206,4 +206,4 @@ function renderFilteredList() {
 listElement.addEventListener('click', onListClick);
 inputElement.addEventListener('keydown', onInputKeydown);
 filterElement.addEventListener('click', onFiltersClick);
-renderList(todoList);
+renderFilteredList();
