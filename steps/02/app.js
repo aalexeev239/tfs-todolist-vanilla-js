@@ -8,7 +8,7 @@ const todoList = [
     'Добавить тудушку в список'
 ];
 
-const listElement = document.querySelector('.list'); // ← добавляйте Element для явного указания переменной
+const listElement = document.querySelector('.list');
 const templateElement = document.getElementById('todoTemplate');
 const templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
 
@@ -36,4 +36,5 @@ function renderList(todos) {
     listElement.appendChild(fragment);
 }
 
+// --- Исполняемый код ---
 renderList(todoList);
