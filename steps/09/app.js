@@ -1,6 +1,6 @@
 "use strict";
 
-// --- Шаг 8: рефакторинг магических значений ---
+// --- Шаг 9: Фильтрация 1 ---
 const keyCode = {
     ENTER: 13
 };
@@ -8,6 +8,12 @@ const keyCode = {
 const todoStatus = {
     TODO: 'todo',
     DONE: 'done'
+};
+
+const filter = {
+    ALL: 'all',
+    DONE: 'done',
+    TODO: 'todo'
 };
 
 const todoList = [
@@ -33,7 +39,8 @@ const listElement = document.querySelector('.list');
 const templateElement = document.getElementById('todoTemplate');
 const templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
 const inputElement = document.querySelector('.add-task__input');
-const filterElement = document.querySelector('.filter');
+const filterElement = document.querySelector('.filters');
+let currentFilter = filter.ALL;
 
 function getTodoElement({name, status}) {
     const newElement = templateContainer.querySelector('.task').cloneNode(true);
@@ -132,7 +139,20 @@ function addNewTodo(name) {
     listElement.insertBefore(getTodoElement(todo), listElement.firstChild);
 }
 
+function onFiltersClick({target}) {
+    const newFilter = target.dataset.filter;
+
+    if (!newFilter || newFilter === currentFilter) {
+        return;
+    }
+
+    currentFilter = newFilter;
+    filterElement.querySelector('.filters__item_selected').classList.remove('filters__item_selected');
+    target.classList.add('filters__item_selected');
+}
+
 // --- Исполняемый код ---
 listElement.addEventListener('click', onListClick);
 inputElement.addEventListener('keydown', onInputKeydown);
+filterElement.addEventListener('click', onFiltersClick);
 renderList(todoList);
