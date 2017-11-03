@@ -1,6 +1,6 @@
 "use strict";
 
-// --- Шаг 7: добавление ---
+// --- Шаг 7: создание новой задачи ---
 const todoList = [
     {
         name: 'Позвонить в сервис',
@@ -23,6 +23,7 @@ const todoList = [
 const listElement = document.querySelector('.list');
 const templateElement = document.getElementById('todoTemplate');
 const templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
+const inputElement = document.querySelector('.add-task__input');
 
 function getTodoElement({name, status}) {
     const newElement = templateContainer.querySelector('.task').cloneNode(true);
@@ -86,6 +87,42 @@ function onListClick(event) {
     }
 }
 
+function onInputKeydown(event) {
+    if (event.keyCode !== 13) {
+        return;
+    }
+
+    if (!inputElement.value) {
+        return;
+    }
+
+    const newName = inputElement.value;
+
+    if (checkTodoExists(newName)) {
+        return;
+    }
+
+    addNewTodo(newName);
+    inputElement.value = '';
+}
+
+function checkTodoExists(newName) {
+    const elements = listElement.querySelectorAll('.task__name');
+    const names = [...elements].map(element => element.textContent);
+
+    return names.indexOf(newName) !== -1;
+}
+
+function addNewTodo(name) {
+    const todo = {
+        name,
+        status: 'todo'
+    };
+
+    listElement.insertBefore(getTodoElement(todo), listElement.firstChild);
+}
+
 // --- Исполняемый код ---
 listElement.addEventListener('click', onListClick);
+inputElement.addEventListener('keydown', onInputKeydown);
 renderList(todoList);
