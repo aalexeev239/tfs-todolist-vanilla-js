@@ -1,59 +1,39 @@
 "use strict";
 
-var listElement = document.querySelector('.list');
-var itemElementList = listElement.children;
-
-// Задание: добавить несколько тудушек
-
-// сформируем задачки
-var todoList = [
+// --- Шаг 2: несколько задач ---
+const todoList = [
     'Позвонить в сервис',
     'Купить хлеб',
     'Захватить мир',
     'Добавить тудушку в список'
 ];
 
-// функция по генерации элементов
-function addTodo(name) {
-    var htmlToAdd = '<div class="task__status task__status_todo"></div>' +
-        '<span class="task__name">' + name + '</span>' +
-        '<div class="task__delete-button">❌</div>';
+const listElement = document.querySelector('.list'); // ← добавляйте Element для явного указания переменной
+const templateElement = document.getElementById('todoTemplate');
+const templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
 
-    var newItemElement = document.createElement('li');
-    newItemElement.classList.add('list__item', 'task', 'task_todo');
-    newItemElement.innerHTML = htmlToAdd;
-    return newItemElement;
-}
+function getTodoElement(todo) {
+    const newElement = templateContainer.querySelector('.task').cloneNode(true);
 
-// добавление элементов
-todoList
-    .map(addTodo)
-    .forEach(function (element) {
-        listElement.appendChild(element);
-    });
+    newElement.querySelector('.task__name').textContent = todo;
 
-// Альтернативный вариант – template
-// http://frontender.info/template/
-var templateElement = document.getElementById('todoTemplate');
-var templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
-
-// функция по генерации элементов
-function addTodoFromTemplate(name) {
-    var newElement = templateContainer.querySelector('.task').cloneNode(true);
-    newElement.querySelector('.task__name').textContent = name;
     return newElement;
 }
 
-todoList
-    .map(addTodoFromTemplate)
-    .forEach(function (element) {
-        listElement.appendChild(element);
+// --- Вариант 1: в лоб ---
+todoList.forEach(todo => {
+    listElement.appendChild(getTodoElement(todo));
+});
+
+// --- Вариант 2: documentFragment ---
+function renderList(todos) {
+    const fragment = document.createDocumentFragment();
+
+    todos.forEach(todo => {
+        fragment.appendChild(getTodoElement(todo));
     });
 
-// Задание: создайте и отрисуйте список тудушек,
-// в котором одни элементы будут невыполнены, а другие выполнены
-// за выполнение отвечают классы task_todo и task_done
-// добавление делается через classList add/remove:
-// newElement.classList.add('task_todo');
+    listElement.appendChild(fragment);
+}
 
-// https://developer.mozilla.org/ru/docs/Web/API/Element/classList
+renderList(todoList);
