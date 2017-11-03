@@ -26,7 +26,7 @@ todoList.forEach(todo => {
 });
 
 // --- Вариант 2: documentFragment ---
-function renderList(todos) {
+function renderList(todos = []) {
     const fragment = document.createDocumentFragment();
 
     todos.forEach(todo => {

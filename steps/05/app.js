@@ -1,6 +1,6 @@
 "use strict";
 
-// --- Шаг 3: учитываем статусы ---
+// --- Шаг 5: статусы с делегированием ---
 const todoList = [
     {
         name: 'Позвонить в сервис',
@@ -28,7 +28,6 @@ function getTodoElement({name, status}) {
     const newElement = templateContainer.querySelector('.task').cloneNode(true);
 
     newElement.querySelector('.task__name').textContent = name;
-    // добавим функцию для статуса
     setStatus(newElement, status);
 
     return newElement;
@@ -45,19 +44,35 @@ function renderList(todos = []) {
 }
 
 function setStatus(todoElement, status) {
-    if (status === 'todo') {
-        todoElement.classList.add('task_todo');
-        todoElement.classList.remove('task_done');
-    } else {
-        todoElement.classList.remove('task_todo');
-        todoElement.classList.add('task_done');
-    }
+    const isTodo = status === 'todo';
 
-    // const isTodo = status === 'todo';
-    //
-    // todoElement.classList.toggle('task_todo', isTodo);
-    // todoElement.classList.toggle('task_done', !isTodo);
+    todoElement.classList.toggle('task_todo', isTodo);
+    todoElement.classList.toggle('task_done', !isTodo);
+}
+
+function changeStatus(todoElement) {
+    const isTodo = checkTodo(todoElement);
+    const newStatus = isTodo ? 'done' : 'todo';
+
+    setStatus(todoElement, newStatus);
+}
+
+function checkTodo(todoElement) {
+    return todoElement.classList.contains('task_todo');
+}
+
+function onListClick(event) {
+    const {target} = event;
+
+    if (checkStatusBtn(target)) {
+        changeStatus(target.parentElement);
+    }
+}
+
+function checkStatusBtn(element) {
+    return element.classList.contains('task__status');
 }
 
 // --- Исполняемый код ---
+listElement.addEventListener('click', onListClick);
 renderList(todoList);
